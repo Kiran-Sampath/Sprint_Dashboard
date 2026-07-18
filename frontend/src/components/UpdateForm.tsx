@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react'
 import { CheckCircle2, ChevronRight } from 'lucide-react'
 import { api } from '../api'
 import type { Member } from '../types'
+import './survey-layout.css'
 
 const categories = ['Technical Architecture','Backend Services and APIs','Frontend and Control Tower Dashboard','AI Agents and Models','OTel Capture and Collector','Egress Gateway and Fail-Open Routing','Telemetry Ingestion and Normalization','Security, Redaction, and Customer Approval','Docker / Kubernetes / Infrastructure','Testing, QA, and Adversarial Scenarios','CI/CD and Integration','Demo, Documentation, and Presentation','Other']
 const leadership = ['Clarified requirements','Refined architecture or interfaces','Assigned or coordinated tasks','Unblocked another team member','Reviewed code or design','Led testing or integration','Identified a major risk','Prepared or led a demo','Documented decisions','No leadership activity today']
@@ -33,17 +34,16 @@ export default function UpdateForm({ members }: { members: Member[] }) {
   }
 
   return <div className="form-page">
-    <section className="form-intro">
-      <span className="eyebrow">Daily check-in · {new Date().toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'})}</span>
-      <h1>Move the sprint forward,<br/><em>one update at a time.</em></h1>
-      <p>Share what moved, what is next, and where you need support. Your update helps the team clear obstacles faster.</p>
-      <div className="progress-note"><span>01</span><div><strong>Before 11:59 PM</strong><small>Estimated time: 3–5 minutes</small></div></div>
-    </section>
+    <header className="survey-header">
+      <span className="eyebrow">Daily check-in</span>
+      <h1>Daily sprint update</h1>
+      <time dateTime={today}>{new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</time>
+    </header>
     <form className="update-form" onSubmit={submit}>
+      <input name="reporting_date" type="hidden" value={today} />
       <div className="section-heading"><span>01</span><div><h2>About today's work</h2><p>Connect your update to the right person and sprint objective.</p></div></div>
       <label className="wide">Your name<select name="member_id" required value={memberId} onChange={e=>setMemberId(e.target.value)}><option value="">Select your name</option>{members.map(m=><option key={m.id} value={m.id}>{m.full_name} · {m.team}</option>)}</select></label>
-      <label>Reporting date<input name="reporting_date" type="date" defaultValue={today} required /></label>
-      <label>Sub-task category<select name="sub_task_category" required><option value="">Select category</option>{categories.map(c=><option key={c}>{c}</option>)}</select></label>
+      <label className="wide">Sub-task category<select name="sub_task_category" required><option value="">Select category</option>{categories.map(c=><option key={c}>{c}</option>)}</select></label>
       <label className="wide">Sprint goal or milestone<input name="sprint_goal" placeholder="Which sprint objective does today's work support?" required /></label>
 
       <div className="section-heading wide"><span>02</span><div><h2>Progress and contribution</h2><p>Be specific—concrete outcomes make coordination easier.</p></div></div>
